@@ -55,4 +55,4 @@ Active aussi la **Deployment Protection** (mot de passe) dans Settings → Deplo
 
 ## Workflow git
 
-Tout le développement se fait sur une branche de travail (jamais directement sur `main`), qui génère une Preview Deployment Vercel à chaque push. `main` ne reçoit un déploiement de production qu'après un merge explicite.
+`claude/great-bardeen-jla5e7` est la branche par défaut du repo et la branche de production sur Vercel : chaque push dessus déploie directement en production. Il n'y a pas de branche `dev` séparée pour l'instant.
