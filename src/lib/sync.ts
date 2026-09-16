@@ -115,7 +115,6 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         name: c.name,
         company: c.company,
         type: c.type,
-        category: c.category,
         email: c.email,
         linkedin: c.linkedin,
         phone: c.phone,

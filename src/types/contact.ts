@@ -5,8 +5,8 @@ export interface NotionContact {
   notionPageId: string;
   name: string;
   company: string | null;
+  /** Combined role · sector classification, e.g. "Partner · Nutrition". */
   type: string | null;
-  category: string | null;
   email: string | null;
   linkedin: string | null;
   phone: string | null;
@@ -38,7 +38,6 @@ export interface CachedContactRow {
   name: string;
   company: string | null;
   type: string | null;
-  category: string | null;
   email: string | null;
   linkedin: string | null;
   phone: string | null;

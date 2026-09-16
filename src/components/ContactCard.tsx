@@ -1,6 +1,6 @@
 import type { CachedContactRow } from "@/types/contact";
 import { CompassIcon, HeadlampIcon, TentIcon } from "@/components/icons";
-import { CategorySelect } from "@/components/CategorySelect";
+import { TypeSelect } from "@/components/TypeSelect";
 import { DraftButton } from "@/components/DraftButton";
 import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
@@ -64,12 +64,7 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
-        {contact.type && (
-          <span className="rounded-full border border-border-subtle px-2 py-0.5 text-noir-nuit/70">
-            {contact.type}
-          </span>
-        )}
-        <CategorySelect pageId={contact.notion_page_id} value={contact.category} />
+        <TypeSelect pageId={contact.notion_page_id} value={contact.type} />
         {contact.is_company_row && (
           <span className="rounded-full border border-border-subtle px-2 py-0.5 text-noir-nuit/50">
             Entreprise

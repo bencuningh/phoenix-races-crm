@@ -39,7 +39,6 @@ function pageToContact(page: PageObjectResponse): NotionContact {
     name: plainText(props["Name"]) ?? "(sans nom)",
     company: plainText(props["Company"]),
     type: plainText(props["Type"]),
-    category: plainText(props["Category"]),
     email: plainText(props["Email"]),
     linkedin: plainText(props["LinkedIn"]),
     phone: plainText(props["Phone"]),
@@ -81,13 +80,13 @@ export async function updateLastReach(pageId: string, isoDate: string): Promise<
   });
 }
 
-export async function updateCategory(pageId: string, category: string): Promise<void> {
+export async function updateType(pageId: string, type: string): Promise<void> {
   const notion = getClient();
   await notion.pages.update({
     page_id: pageId,
     properties: {
-      Category: {
-        select: { name: category },
+      Type: {
+        select: { name: type },
       },
     },
   });

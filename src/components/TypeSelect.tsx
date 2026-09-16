@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORIES } from "@/lib/constants";
+import { TYPES } from "@/lib/constants";
 
-export function CategorySelect({
+export function TypeSelect({
   pageId,
   value,
 }: {
@@ -21,10 +21,10 @@ export function CategorySelect({
     setCurrent(next);
     setError(null);
     try {
-      const res = await fetch(`/api/contacts/${pageId}/category`, {
+      const res = await fetch(`/api/contacts/${pageId}/type`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category: next }),
+        body: JSON.stringify({ type: next }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -46,11 +46,11 @@ export function CategorySelect({
         className="rounded-full border border-border-subtle bg-surface px-2 py-0.5 text-xs text-noir-nuit/70 disabled:opacity-60"
       >
         <option value="" disabled>
-          Catégorie
+          Type
         </option>
-        {CATEGORIES.map((c) => (
-          <option key={c} value={c}>
-            {c}
+        {TYPES.map((t) => (
+          <option key={t} value={t}>
+            {t}
           </option>
         ))}
       </select>

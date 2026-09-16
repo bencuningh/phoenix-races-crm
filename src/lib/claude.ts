@@ -39,7 +39,6 @@ Contact à relancer :
 - Nom : ${contact.name}
 - Entreprise : ${contact.company ?? "N/A"}
 - Type : ${contact.type ?? "N/A"}
-- Catégorie : ${contact.category ?? "N/A"}
 - Dernier contact : ${contact.last_reach ?? "jamais"} (${contact.days_since_contact ?? "?"} jours depuis)
 - Raison de la relance : ${contact.followup_reason ?? "N/A"}
 
