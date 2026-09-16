@@ -106,6 +106,13 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
           value={contact.linkedin}
           placeholder="+ ajouter un LinkedIn"
         />
+        <EditableField
+          pageId={contact.notion_page_id}
+          field="phone"
+          type="tel"
+          value={contact.phone}
+          placeholder="+ ajouter un téléphone"
+        />
       </div>
 
       {contact.needs_followup && <DraftButton pageId={contact.notion_page_id} />}

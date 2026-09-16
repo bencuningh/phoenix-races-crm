@@ -118,6 +118,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         category: c.category,
         email: c.email,
         linkedin: c.linkedin,
+        phone: c.phone,
         last_reach: c.lastReach,
         is_company_row: c.isCompanyRow,
         days_since_contact: c.daysSinceContact,

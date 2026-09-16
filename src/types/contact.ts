@@ -9,6 +9,7 @@ export interface NotionContact {
   category: string | null;
   email: string | null;
   linkedin: string | null;
+  phone: string | null;
   /** ISO date string (YYYY-MM-DD), or null if "Last Reach" is empty. */
   lastReach: string | null;
 }
@@ -40,6 +41,7 @@ export interface CachedContactRow {
   category: string | null;
   email: string | null;
   linkedin: string | null;
+  phone: string | null;
   last_reach: string | null;
   is_company_row: boolean;
   days_since_contact: number | null;

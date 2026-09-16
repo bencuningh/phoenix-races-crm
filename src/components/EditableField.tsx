@@ -11,10 +11,10 @@ export function EditableField({
   type = "text",
 }: {
   pageId: string;
-  field: "email" | "linkedin";
+  field: "email" | "linkedin" | "phone";
   value: string | null;
   placeholder: string;
-  type?: "text" | "email" | "url";
+  type?: "text" | "email" | "url" | "tel";
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

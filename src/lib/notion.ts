@@ -26,6 +26,9 @@ function plainText(prop: PageObjectResponse["properties"][string]): string | nul
   if (prop.type === "date") {
     return prop.date?.start ?? null;
   }
+  if (prop.type === "phone_number") {
+    return prop.phone_number;
+  }
   return null;
 }
 
@@ -39,6 +42,7 @@ function pageToContact(page: PageObjectResponse): NotionContact {
     category: plainText(props["Category"]),
     email: plainText(props["Email"]),
     linkedin: plainText(props["LinkedIn"]),
+    phone: plainText(props["Phone"]),
     lastReach: plainText(props["Last Reach"]),
   };
 }
@@ -105,6 +109,16 @@ export async function updateLinkedin(pageId: string, url: string | null): Promis
     page_id: pageId,
     properties: {
       LinkedIn: { url },
+    },
+  });
+}
+
+export async function updatePhone(pageId: string, phoneNumber: string | null): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      Phone: { phone_number: phoneNumber },
     },
   });
 }
