@@ -1,5 +1,7 @@
 import type { CachedContactRow } from "@/types/contact";
 import { CompassIcon, HeadlampIcon, TentIcon } from "@/components/icons";
+import { CategorySelect } from "@/components/CategorySelect";
+import { DraftButton } from "@/components/DraftButton";
 
 const REASON_LABEL: Record<string, string> = {
   never_contacted: "Jamais contacté",
@@ -64,11 +66,7 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
             {contact.type}
           </span>
         )}
-        {contact.category && (
-          <span className="rounded-full border border-border-subtle px-2 py-0.5 text-noir-nuit/70">
-            {contact.category}
-          </span>
-        )}
+        <CategorySelect pageId={contact.notion_page_id} value={contact.category} />
         {contact.is_company_row && (
           <span className="rounded-full border border-border-subtle px-2 py-0.5 text-noir-nuit/50">
             Entreprise
@@ -88,6 +86,8 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
       {!contact.email && (
         <p className="mt-2 text-xs text-noir-nuit/50">Pas d&rsquo;email — à qualifier</p>
       )}
+
+      {contact.needs_followup && <DraftButton pageId={contact.notion_page_id} />}
     </li>
   );
 }

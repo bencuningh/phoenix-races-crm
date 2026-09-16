@@ -76,3 +76,15 @@ export async function updateLastReach(pageId: string, isoDate: string): Promise<
     },
   });
 }
+
+export async function updateCategory(pageId: string, category: string): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      Category: {
+        select: { name: category },
+      },
+    },
+  });
+}

@@ -28,6 +28,9 @@ export const env = {
   get googleRedirectUri() {
     return required("GOOGLE_REDIRECT_URI");
   },
+  get anthropicApiKey() {
+    return required("ANTHROPIC_API_KEY");
+  },
   get cronSecret() {
     return process.env.CRON_SECRET ?? "";
   },

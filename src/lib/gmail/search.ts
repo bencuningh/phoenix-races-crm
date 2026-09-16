@@ -49,3 +49,53 @@ export async function crossContactWithGmail(
 
   return { lastSent, lastReceived };
 }
+
+export interface EmailHistoryItem {
+  date: string | null;
+  from: string | null;
+  subject: string | null;
+  snippet: string;
+}
+
+/**
+ * Recent messages (either direction) with this address, newest first, for use as
+ * context when drafting a follow-up — subject/snippet only, not full MIME bodies.
+ */
+export async function getRecentThreadHistory(
+  auth: OAuth2Client,
+  email: string,
+  maxMessages = 6,
+): Promise<EmailHistoryItem[]> {
+  const gmail = google.gmail({ version: "v1", auth });
+  const sanitized = email.replace(/"/g, '\\"');
+
+  const list = await gmail.users.messages.list({
+    userId: "me",
+    q: `from:"${sanitized}" OR to:"${sanitized}"`,
+    maxResults: maxMessages,
+  });
+  const ids = (list.data.messages ?? []).map((m) => m.id).filter((id): id is string => Boolean(id));
+  if (ids.length === 0) return [];
+
+  const messages = await Promise.all(
+    ids.map((id) =>
+      gmail.users.messages.get({
+        userId: "me",
+        id,
+        format: "metadata",
+        metadataHeaders: ["From", "Subject"],
+      }),
+    ),
+  );
+
+  return messages.map((m) => {
+    const headers = m.data.payload?.headers ?? [];
+    const find = (name: string) => headers.find((h) => h.name === name)?.value ?? null;
+    return {
+      date: toIsoDate(m.data.internalDate),
+      from: find("From"),
+      subject: find("Subject"),
+      snippet: m.data.snippet ?? "",
+    };
+  });
+}

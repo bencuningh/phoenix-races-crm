@@ -10,6 +10,7 @@ Croise la base de contacts Notion avec Gmail pour identifier qui relancer en pri
 - Supabase — cache des contacts (`contacts_cache`), tokens OAuth (`oauth_tokens`), historique de sync (`sync_log`)
 - Notion API — source de vérité des contacts
 - Gmail API (OAuth2, lecture seule) — détection des derniers échanges
+- Claude API (Anthropic) — génération de brouillons de relance à partir de l'historique email
 
 ## Développement
 
@@ -41,13 +42,18 @@ npm run dev
 Projet dédié `phoenix-races-crm` (org "Phoenix Races") déjà créé, schéma appliqué via `supabase/migrations/0001_init.sql`.
 Récupère `SUPABASE_URL` et la **service role key** (Settings → API — jamais l'anon/publishable key, elle n'a pas accès à ces tables) dans le dashboard Supabase.
 
-### 4. Vercel
+### 4. Anthropic (brouillons de relance)
+
+Crée une clé API sur [console.anthropic.com](https://console.anthropic.com) → renseigne `ANTHROPIC_API_KEY`. Utilisée uniquement à la demande (bouton "Générer un brouillon" sur un contact à relancer), donc coût minime.
+
+### 5. Vercel
 
 À configurer dans les **Settings → Environment Variables** du projet Vercel une fois déployé :
 
 - `NOTION_API_KEY`, `NOTION_DATA_SOURCE_ID`
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`
+- `ANTHROPIC_API_KEY`
 - `CRON_SECRET` (chaîne aléatoire de ton choix — protège `/api/cron/sync`)
 - `FOLLOWUP_THRESHOLD_DAYS` (optionnel, défaut 12)
 
