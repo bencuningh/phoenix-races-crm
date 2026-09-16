@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 export function SnoozeControl({
   pageId,
   value,
+  hideLabel = false,
 }: {
   pageId: string;
   value: string | null;
+  hideLabel?: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -26,7 +28,7 @@ export function SnoozeControl({
 
   return (
     <div className="flex items-center gap-1.5 text-[11px] text-noir-nuit/60">
-      <span>Relancer le</span>
+      {!hideLabel && <span>Relancer le</span>}
       <input
         type="date"
         value={date}
