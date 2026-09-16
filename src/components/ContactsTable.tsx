@@ -14,8 +14,9 @@ function formatDate(iso: string | null): string {
   });
 }
 
-const th = "sticky top-0 bg-turquoise-fonce px-3 py-2 text-left text-xs font-medium text-blanc-sable whitespace-nowrap";
-const td = "px-3 py-2 align-top text-xs text-noir-nuit border-b border-border-subtle whitespace-nowrap";
+const th = "sticky top-0 bg-turquoise-fonce px-2 py-1.5 text-left text-xs font-medium text-blanc-sable whitespace-nowrap";
+const td = "px-2 py-1.5 align-top text-xs text-noir-nuit border-b border-border-subtle whitespace-nowrap";
+const truncateCell = "max-w-[8rem] truncate";
 
 export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
   return (
@@ -39,8 +40,12 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
         <tbody>
           {contacts.map((c) => (
             <tr key={c.id} className="bg-surface even:bg-blanc-sable/40">
-              <td className={`${td} font-semibold`}>{c.name}</td>
-              <td className={td}>{c.company && c.company !== c.name ? c.company : "—"}</td>
+              <td className={`${td} ${truncateCell} font-semibold`} title={c.name}>
+                {c.name}
+              </td>
+              <td className={`${td} ${truncateCell}`} title={c.company ?? undefined}>
+                {c.company && c.company !== c.name ? c.company : "—"}
+              </td>
               <td className={td}>
                 <TypeSelect pageId={c.notion_page_id} value={c.type} />
               </td>
@@ -61,10 +66,10 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
                 {c.needs_qualification ? "À qualifier" : c.needs_followup ? "À relancer" : "OK"}
               </td>
               <td className={td}>
-                <StandbyToggle pageId={c.notion_page_id} standby={c.standby} />
+                <StandbyToggle pageId={c.notion_page_id} standby={c.standby} compact />
               </td>
               <td className={td}>
-                <SnoozeControl pageId={c.notion_page_id} value={c.snooze_until} />
+                <SnoozeControl pageId={c.notion_page_id} value={c.snooze_until} hideLabel />
               </td>
             </tr>
           ))}

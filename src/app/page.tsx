@@ -31,7 +31,7 @@ export default async function Home() {
   return (
     <div className="flex min-h-full flex-col">
       <header className="header-motif bg-turquoise-fonce px-4 py-6 text-blanc-sable">
-        <div className="mx-auto flex max-w-2xl items-start justify-between gap-4">
+        <div className="mx-auto flex max-w-7xl items-start justify-between gap-4">
           <div>
             <p className="font-display text-2xl leading-none">Phoenix Races</p>
             <p className="mt-1 text-sm text-blanc-sable/75">Relances partenaires</p>
@@ -40,7 +40,7 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-5">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-5">
         {error ? (
           <p className="rounded-xl border border-orange-braise/40 bg-orange-braise/10 p-4 text-sm text-orange-braise">
             Impossible de lire le cache Supabase ({error.message}). Lance une synchronisation

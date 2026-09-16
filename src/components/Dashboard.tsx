@@ -149,7 +149,7 @@ export function Dashboard({
       ) : tab === "tableau" ? (
         <ContactsTable contacts={sortContacts(filtered, sort)} />
       ) : (
-        <ul className="flex flex-col gap-2.5">
+        <ul className="mx-auto flex w-full max-w-2xl flex-col gap-2.5">
           {filtered.map((contact) => (
             <ContactCard key={contact.id} contact={contact} />
           ))}

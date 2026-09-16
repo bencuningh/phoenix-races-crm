@@ -3,7 +3,15 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-export function StandbyToggle({ pageId, standby }: { pageId: string; standby: boolean }) {
+export function StandbyToggle({
+  pageId,
+  standby,
+  compact = false,
+}: {
+  pageId: string;
+  standby: boolean;
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -23,7 +31,7 @@ export function StandbyToggle({ pageId, standby }: { pageId: string; standby: bo
       disabled={isPending}
       className="rounded-full border border-border-subtle px-2 py-0.5 text-[11px] text-noir-nuit/60 disabled:opacity-60"
     >
-      {standby ? "Reprendre" : "Mettre en stand-by"}
+      {standby ? "Reprendre" : compact ? "Stand-by" : "Mettre en stand-by"}
     </button>
   );
 }
