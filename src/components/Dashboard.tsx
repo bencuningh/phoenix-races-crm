@@ -5,9 +5,8 @@ import type { CachedContactRow } from "@/types/contact";
 import { ContactCard } from "@/components/ContactCard";
 import { ContactsTable } from "@/components/ContactsTable";
 
-type Tab = "relances" | "qualifier" | "toutes";
+type Tab = "relances" | "qualifier" | "toutes" | "tableau";
 type SortKey = "name" | "last_reach_desc" | "last_reach_asc" | "days_desc";
-type ViewMode = "cartes" | "tableau";
 
 function FilterChip({
   label,
@@ -61,10 +60,13 @@ export function Dashboard({
   const [tab, setTab] = useState<Tab>("relances");
   const [type, setType] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("name");
-  const [view, setView] = useState<ViewMode>("cartes");
 
   const source =
-    tab === "relances" ? followupContacts : tab === "qualifier" ? qualifyContacts : allContacts;
+    tab === "relances"
+      ? followupContacts
+      : tab === "qualifier"
+        ? qualifyContacts
+        : allContacts;
 
   const filtered = useMemo(() => {
     return source.filter((c) => !type || c.type === type);
@@ -72,11 +74,11 @@ export function Dashboard({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <button
           type="button"
           onClick={() => setTab("relances")}
-          className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
+          className={`rounded-lg py-2 text-sm font-medium transition-colors ${
             tab === "relances"
               ? "bg-turquoise-fonce text-blanc-sable"
               : "bg-surface text-noir-nuit/70 border border-border-subtle"
@@ -87,7 +89,7 @@ export function Dashboard({
         <button
           type="button"
           onClick={() => setTab("qualifier")}
-          className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
+          className={`rounded-lg py-2 text-sm font-medium transition-colors ${
             tab === "qualifier"
               ? "bg-turquoise-fonce text-blanc-sable"
               : "bg-surface text-noir-nuit/70 border border-border-subtle"
@@ -98,13 +100,24 @@ export function Dashboard({
         <button
           type="button"
           onClick={() => setTab("toutes")}
-          className={`flex-1 rounded-lg py-2 text-sm font-medium transition-colors ${
+          className={`rounded-lg py-2 text-sm font-medium transition-colors ${
             tab === "toutes"
               ? "bg-turquoise-fonce text-blanc-sable"
               : "bg-surface text-noir-nuit/70 border border-border-subtle"
           }`}
         >
           Toutes ({allContacts.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("tableau")}
+          className={`rounded-lg py-2 text-sm font-medium transition-colors ${
+            tab === "tableau"
+              ? "bg-turquoise-fonce text-blanc-sable"
+              : "bg-surface text-noir-nuit/70 border border-border-subtle"
+          }`}
+        >
+          Tableau
         </button>
       </div>
 
@@ -115,29 +128,25 @@ export function Dashboard({
             <FilterChip key={t} label={t} active={type === t} onClick={() => setType(t)} />
           ))}
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <FilterChip label="Cartes" active={view === "cartes"} onClick={() => setView("cartes")} />
-          <FilterChip label="Tableau" active={view === "tableau"} onClick={() => setView("tableau")} />
-          {view === "tableau" && (
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              className="rounded-full border border-border-subtle bg-surface px-3 py-1 text-xs text-noir-nuit/70"
-            >
-              <option value="name">Trier par nom</option>
-              <option value="last_reach_desc">Dernier contact (récent d&apos;abord)</option>
-              <option value="last_reach_asc">Dernier contact (ancien d&apos;abord)</option>
-              <option value="days_desc">Jours depuis contact (décroissant)</option>
-            </select>
-          )}
-        </div>
+        {tab === "tableau" && (
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="w-fit rounded-full border border-border-subtle bg-surface px-3 py-1 text-xs text-noir-nuit/70"
+          >
+            <option value="name">Trier par nom</option>
+            <option value="last_reach_desc">Dernier contact (récent d&apos;abord)</option>
+            <option value="last_reach_asc">Dernier contact (ancien d&apos;abord)</option>
+            <option value="days_desc">Jours depuis contact (décroissant)</option>
+          </select>
+        )}
       </div>
 
       {filtered.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border-subtle p-6 text-center text-sm text-noir-nuit/50">
           Aucun contact ne correspond à ces filtres.
         </p>
-      ) : view === "tableau" ? (
+      ) : tab === "tableau" ? (
         <ContactsTable contacts={sortContacts(filtered, sort)} />
       ) : (
         <ul className="flex flex-col gap-2.5">
