@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateCategory } from "@/lib/notion";
+import { updateType } from "@/lib/notion";
 import { createServiceClient } from "@/lib/supabase";
-import { CATEGORIES } from "@/lib/constants";
+import { TYPES } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -11,26 +11,26 @@ export async function PATCH(
 ) {
   const { pageId } = await params;
   const body = await request.json().catch(() => null);
-  const category = body?.category;
+  const type = body?.type;
 
-  if (typeof category !== "string" || !CATEGORIES.includes(category as (typeof CATEGORIES)[number])) {
+  if (typeof type !== "string" || !TYPES.includes(type as (typeof TYPES)[number])) {
     return NextResponse.json(
-      { error: `category must be one of: ${CATEGORIES.join(", ")}` },
+      { error: `type must be one of: ${TYPES.join(", ")}` },
       { status: 400 },
     );
   }
 
   try {
-    await updateCategory(pageId, category);
+    await updateType(pageId, type);
 
     const supabase = createServiceClient();
     const { error } = await supabase
       .from("contacts_cache")
-      .update({ category, updated_at: new Date().toISOString() })
+      .update({ type, updated_at: new Date().toISOString() })
       .eq("notion_page_id", pageId);
     if (error) throw error;
 
-    return NextResponse.json({ ok: true, category });
+    return NextResponse.json({ ok: true, type });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : String(err) },

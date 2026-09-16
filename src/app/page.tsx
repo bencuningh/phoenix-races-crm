@@ -26,7 +26,6 @@ export default async function Home() {
     .sort(sortFollowup);
   const qualifyContacts = contacts.filter((c) => c.needs_qualification);
 
-  const categories = [...new Set(contacts.map((c) => c.category).filter(Boolean))] as string[];
   const types = [...new Set(contacts.map((c) => c.type).filter(Boolean))] as string[];
 
   return (
@@ -56,7 +55,6 @@ export default async function Home() {
             followupContacts={followupContacts}
             qualifyContacts={qualifyContacts}
             allContacts={contacts}
-            categories={categories}
             types={types}
           />
         )}

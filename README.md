@@ -61,8 +61,9 @@ Active aussi la **Deployment Protection** (mot de passe) dans Settings → Deplo
 
 ## Fonctionnalités du dashboard
 
-- **À relancer / À qualifier / Toutes** — trois vues ; "Toutes" liste chaque contact avec un tri (nom, dernier contact, jours écoulés) et les filtres Catégorie/Type, comme une base Notion.
-- **Catégorie éditable** — change directement depuis une carte, écrit dans Notion et Supabase.
+- **À relancer / À qualifier / Toutes** — trois vues ; "Toutes" liste chaque contact avec un tri (nom, dernier contact, jours écoulés) et le filtre Type. Chaque vue peut s'afficher en **Cartes** ou en **Tableau** (lignes/colonnes défilables horizontalement sur mobile, comme une vue database Notion).
+- **Type éditable** — un seul champ combinant rôle et secteur (ex. "Partner · Nutrition"), fusion de ce qui était Type et Category ; change directement depuis une carte ou une ligne du tableau, écrit dans Notion et Supabase.
+- **Email / Téléphone / LinkedIn éditables** — idem, en ligne, avec écriture Notion + Supabase.
 - **Stand-by** — met un contact en pause indéfiniment (exclu de "à relancer" et du digest) jusqu'à ce qu'il soit repris.
 - **Relancer le [date]** — reporte un contact à une date précise sans le mettre en stand-by permanent ; redevient actif automatiquement une fois la date passée.
 - **Générer un brouillon** — rédige un email de relance via Claude, à partir de l'historique Gmail réel avec ce contact.
