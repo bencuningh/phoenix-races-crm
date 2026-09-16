@@ -31,6 +31,15 @@ body {
   font-family: var(--font-garet), "Poppins", sans-serif;
 }
 
+button:not(:disabled),
+select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .font-display {
   font-family: var(--font-league-gothic), "Poppins", sans-serif;
   letter-spacing: 0.03em;
