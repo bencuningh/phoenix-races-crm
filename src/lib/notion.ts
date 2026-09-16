@@ -88,3 +88,23 @@ export async function updateCategory(pageId: string, category: string): Promise<
     },
   });
 }
+
+export async function updateEmail(pageId: string, email: string | null): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      Email: { email },
+    },
+  });
+}
+
+export async function updateLinkedin(pageId: string, url: string | null): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      LinkedIn: { url },
+    },
+  });
+}

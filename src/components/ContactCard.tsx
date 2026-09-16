@@ -4,6 +4,7 @@ import { CategorySelect } from "@/components/CategorySelect";
 import { DraftButton } from "@/components/DraftButton";
 import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
+import { EditableField } from "@/components/EditableField";
 
 const REASON_LABEL: Record<string, string> = {
   never_contacted: "Jamais contacté",
@@ -90,9 +91,22 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
         <SnoozeControl pageId={contact.notion_page_id} value={contact.snooze_until} />
       </div>
 
-      {!contact.email && (
-        <p className="mt-2 text-xs text-noir-nuit/50">Pas d&rsquo;email — à qualifier</p>
-      )}
+      <div className="mt-2 flex flex-col gap-1">
+        <EditableField
+          pageId={contact.notion_page_id}
+          field="email"
+          type="email"
+          value={contact.email}
+          placeholder="+ ajouter un email"
+        />
+        <EditableField
+          pageId={contact.notion_page_id}
+          field="linkedin"
+          type="url"
+          value={contact.linkedin}
+          placeholder="+ ajouter un LinkedIn"
+        />
+      </div>
 
       {contact.needs_followup && <DraftButton pageId={contact.notion_page_id} />}
     </li>
