@@ -1,5 +1,5 @@
 import { env } from "@/lib/env";
-import type { FollowupReason } from "@/types/contact";
+import type { CachedContactRow, FollowupReason } from "@/types/contact";
 
 function daysBetween(isoDate: string, now: Date): number {
   const then = new Date(`${isoDate}T00:00:00Z`).getTime();
@@ -53,4 +53,11 @@ export function computeFollowup(
     needsFollowup: true,
     followupReason: iSentLast ? "awaiting_reply" : "silence",
   };
+}
+
+/** True if a contact is paused indefinitely or snoozed to a future date — hidden from "à relancer" and the digest. */
+export function isSnoozed(contact: Pick<CachedContactRow, "standby" | "snooze_until">, today: Date = new Date()): boolean {
+  if (contact.standby) return true;
+  if (!contact.snooze_until) return false;
+  return contact.snooze_until > today.toISOString().slice(0, 10);
 }

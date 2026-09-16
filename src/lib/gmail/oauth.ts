@@ -2,7 +2,10 @@ import { google } from "googleapis";
 import { env } from "@/lib/env";
 import { createServiceClient } from "@/lib/supabase";
 
-export const GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"];
+export const GMAIL_SCOPES = [
+  "https://www.googleapis.com/auth/gmail.readonly",
+  "https://www.googleapis.com/auth/gmail.send",
+];
 
 export function createOAuthClient() {
   return new google.auth.OAuth2(

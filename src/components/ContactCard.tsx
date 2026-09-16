@@ -2,6 +2,8 @@ import type { CachedContactRow } from "@/types/contact";
 import { CompassIcon, HeadlampIcon, TentIcon } from "@/components/icons";
 import { CategorySelect } from "@/components/CategorySelect";
 import { DraftButton } from "@/components/DraftButton";
+import { StandbyToggle } from "@/components/StandbyToggle";
+import { SnoozeControl } from "@/components/SnoozeControl";
 
 const REASON_LABEL: Record<string, string> = {
   never_contacted: "Jamais contacté",
@@ -72,6 +74,7 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
             Entreprise
           </span>
         )}
+        <StandbyToggle pageId={contact.notion_page_id} standby={contact.standby} />
       </div>
 
       <div className="mt-3 flex items-center justify-between text-sm text-noir-nuit/70">
@@ -81,6 +84,10 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
             {contact.days_since_contact}&nbsp;j
           </span>
         )}
+      </div>
+
+      <div className="mt-2">
+        <SnoozeControl pageId={contact.notion_page_id} value={contact.snooze_until} />
       </div>
 
       {!contact.email && (
