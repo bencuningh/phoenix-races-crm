@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase";
 import { Dashboard } from "@/components/Dashboard";
 import { SyncButton } from "@/components/SyncButton";
+import { isSnoozed } from "@/lib/followup";
 import type { CachedContactRow } from "@/types/contact";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,9 @@ export default async function Home() {
     .order("name", { ascending: true });
 
   const contacts: CachedContactRow[] = data ?? [];
-  const followupContacts = contacts.filter((c) => c.needs_followup).sort(sortFollowup);
+  const followupContacts = contacts
+    .filter((c) => c.needs_followup && !isSnoozed(c))
+    .sort(sortFollowup);
   const qualifyContacts = contacts.filter((c) => c.needs_qualification);
 
   const categories = [...new Set(contacts.map((c) => c.category).filter(Boolean))] as string[];
@@ -52,6 +55,7 @@ export default async function Home() {
           <Dashboard
             followupContacts={followupContacts}
             qualifyContacts={qualifyContacts}
+            allContacts={contacts}
             categories={categories}
             types={types}
           />

@@ -46,5 +46,7 @@ export interface CachedContactRow {
   needs_followup: boolean;
   followup_reason: FollowupReason | null;
   needs_qualification: boolean;
+  standby: boolean;
+  snooze_until: string | null;
   updated_at: string;
 }
