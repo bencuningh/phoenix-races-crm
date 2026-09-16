@@ -13,4 +13,46 @@ Croise la base de contacts Notion avec Gmail pour identifier qui relancer en pri
 
 ## Développement
 
-Voir la documentation dans le dossier du projet une fois l'app Next.js initialisée.
+```bash
+npm install
+cp .env.example .env.local   # remplir les valeurs, voir "Configuration" ci-dessous
+npm run dev
+```
+
+## Configuration
+
+### 1. Notion
+
+1. Crée une intégration interne sur [notion.so/my-integrations](https://www.notion.so/my-integrations), copie son secret dans `NOTION_API_KEY`.
+2. Ouvre la base "Phoenix Races — Contacts", menu `•••` → `Connections` → ajoute l'intégration.
+3. `NOTION_DATA_SOURCE_ID` est déjà renseigné dans `.env.example` (data source de la base contacts).
+
+### 2. Google Cloud / Gmail
+
+1. Crée un projet sur [console.cloud.google.com](https://console.cloud.google.com), active l'API Gmail.
+2. Écran de consentement OAuth : type "External" (ou "Internal" si Workspace), scope `gmail.readonly`, ajoute ton compte comme testeur si l'app reste en mode test.
+3. Identifiants → Créer des identifiants → ID client OAuth → type "Application Web". URI de redirection autorisée :
+   `https://<ton-domaine-vercel>/api/auth/google/callback` (et `http://localhost:3000/api/auth/google/callback` pour le dev local).
+4. Renseigne `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`.
+5. Une fois déployé, visite `/api/auth/google` pour lancer le consentement — le refresh token est stocké dans Supabase (`oauth_tokens`).
+
+### 3. Supabase
+
+Projet dédié `phoenix-races-crm` (org "Phoenix Races") déjà créé, schéma appliqué via `supabase/migrations/0001_init.sql`.
+Récupère `SUPABASE_URL` et la **service role key** (Settings → API — jamais l'anon/publishable key, elle n'a pas accès à ces tables) dans le dashboard Supabase.
+
+### 4. Vercel
+
+À configurer dans les **Settings → Environment Variables** du projet Vercel une fois déployé :
+
+- `NOTION_API_KEY`, `NOTION_DATA_SOURCE_ID`
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`
+- `CRON_SECRET` (chaîne aléatoire de ton choix — protège `/api/cron/sync`)
+- `FOLLOWUP_THRESHOLD_DAYS` (optionnel, défaut 12)
+
+Active aussi la **Deployment Protection** (mot de passe) dans Settings → Deployment Protection, puisque l'outil contient des données de partenariat sensibles.
+
+## Workflow git
+
+Tout le développement se fait sur une branche de travail (jamais directement sur `main`), qui génère une Preview Deployment Vercel à chaque push. `main` ne reçoit un déploiement de production qu'après un merge explicite.
