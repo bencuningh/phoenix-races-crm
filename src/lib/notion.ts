@@ -1,0 +1,78 @@
+import { Client } from "@notionhq/client";
+import type {
+  PageObjectResponse,
+  QueryDataSourceResponse,
+} from "@notionhq/client/build/src/api-endpoints";
+import { env } from "@/lib/env";
+import type { NotionContact } from "@/types/contact";
+
+function getClient() {
+  return new Client({ auth: env.notionApiKey });
+}
+
+function plainText(prop: PageObjectResponse["properties"][string]): string | null {
+  if (prop.type === "title") {
+    return prop.title.map((t) => t.plain_text).join("") || null;
+  }
+  if (prop.type === "select") {
+    return prop.select?.name ?? null;
+  }
+  if (prop.type === "email") {
+    return prop.email;
+  }
+  if (prop.type === "url") {
+    return prop.url;
+  }
+  if (prop.type === "date") {
+    return prop.date?.start ?? null;
+  }
+  return null;
+}
+
+function pageToContact(page: PageObjectResponse): NotionContact {
+  const props = page.properties;
+  return {
+    notionPageId: page.id,
+    name: plainText(props["Name"]) ?? "(sans nom)",
+    company: plainText(props["Company"]),
+    type: plainText(props["Type"]),
+    category: plainText(props["Category"]),
+    email: plainText(props["Email"]),
+    linkedin: plainText(props["LinkedIn"]),
+    lastReach: plainText(props["Last Reach"]),
+  };
+}
+
+export async function fetchContacts(): Promise<NotionContact[]> {
+  const notion = getClient();
+  const contacts: NotionContact[] = [];
+  let cursor: string | undefined;
+
+  do {
+    const response: QueryDataSourceResponse = await notion.dataSources.query({
+      data_source_id: env.notionDataSourceId,
+      start_cursor: cursor,
+      page_size: 100,
+    });
+    for (const page of response.results) {
+      if ("properties" in page) {
+        contacts.push(pageToContact(page as PageObjectResponse));
+      }
+    }
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+  } while (cursor);
+
+  return contacts;
+}
+
+export async function updateLastReach(pageId: string, isoDate: string): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      "Last Reach": {
+        date: { start: isoDate },
+      },
+    },
+  });
+}

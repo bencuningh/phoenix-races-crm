@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --orange-braise: #d76233;
+  --blanc-sable: #fdf6eb;
+  --noir-nuit: #14100e;
+  --turquoise-fonce: #122620;
+
+  --background: var(--blanc-sable);
+  --foreground: var(--noir-nuit);
+  --surface: #ffffff;
+  --border-subtle: color-mix(in srgb, var(--noir-nuit) 12%, transparent);
+}
+
+@theme inline {
+  --color-orange-braise: var(--orange-braise);
+  --color-blanc-sable: var(--blanc-sable);
+  --color-noir-nuit: var(--noir-nuit);
+  --color-turquoise-fonce: var(--turquoise-fonce);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border-subtle: var(--border-subtle);
+  --font-body: var(--font-garet);
+  --font-display: var(--font-league-gothic);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-garet), "Poppins", sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-league-gothic), "Poppins", sans-serif;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Faint pine/mountain ridge motif for the header background. */
+.header-motif {
+  background-image: repeating-linear-gradient(
+      115deg,
+      color-mix(in srgb, var(--blanc-sable) 8%, transparent) 0,
+      color-mix(in srgb, var(--blanc-sable) 8%, transparent) 2px,
+      transparent 2px,
+      transparent 14px
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='80' viewBox='0 0 240 80'%3E%3Cg fill='%23FDF6EB' fill-opacity='0.08'%3E%3Cpath d='M20 70 L35 40 L45 55 L60 20 L75 70 Z'/%3E%3Cpath d='M90 70 L108 35 L120 52 L138 15 L156 70 Z'/%3E%3Cpath d='M170 70 L184 42 L194 56 L210 25 L226 70 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: bottom;
+}
