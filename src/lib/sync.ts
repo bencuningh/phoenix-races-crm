@@ -3,6 +3,7 @@ import { getAuthorizedGmailClient } from "@/lib/gmail/oauth";
 import { crossContactWithGmail } from "@/lib/gmail/search";
 import { computeFollowup, maxIsoDate } from "@/lib/followup";
 import { createServiceClient } from "@/lib/supabase";
+import { getErrorMessage } from "@/lib/errors";
 import type { EnrichedContact, GmailCrossResult, NotionContact } from "@/types/contact";
 
 function isCompanyRow(contact: NotionContact): boolean {
@@ -45,7 +46,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
     } catch (err) {
       errors.push({
         contact: "(gmail)",
-        message: err instanceof Error ? err.message : String(err),
+        message: getErrorMessage(err),
       });
     }
 
@@ -67,7 +68,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
       } catch (err) {
         errors.push({
           contact: contact.name,
-          message: err instanceof Error ? err.message : String(err),
+          message: getErrorMessage(err),
         });
       }
     }
@@ -152,7 +153,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
 
     return { status, contactsProcessed: contacts.length, contactsUpdated, errors };
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = getErrorMessage(err);
     await supabase
       .from("sync_log")
       .update({

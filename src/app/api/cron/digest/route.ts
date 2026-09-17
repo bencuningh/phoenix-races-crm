@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { getAuthorizedGmailClient } from "@/lib/gmail/oauth";
 import { sendSelfEmail } from "@/lib/gmail/send";
 import { isSnoozed } from "@/lib/followup";
+import { getErrorMessage } from "@/lib/errors";
 import type { CachedContactRow } from "@/types/contact";
 
 export const dynamic = "force-dynamic";
@@ -61,9 +62,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ ok: true, contactsCount: contacts.length });
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getErrorMessage(err) }, { status: 500 });
   }
 }

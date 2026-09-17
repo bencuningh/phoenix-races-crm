@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { getAuthorizedGmailClient } from "@/lib/gmail/oauth";
 import { getRecentThreadHistory, type EmailHistoryItem } from "@/lib/gmail/search";
 import { generateFollowupDraft } from "@/lib/claude";
+import { getErrorMessage } from "@/lib/errors";
 import type { CachedContactRow } from "@/types/contact";
 
 export const dynamic = "force-dynamic";
@@ -43,9 +44,6 @@ export async function POST(
     const draft = await generateFollowupDraft(contact, history);
     return NextResponse.json(draft);
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getErrorMessage(err) }, { status: 500 });
   }
 }

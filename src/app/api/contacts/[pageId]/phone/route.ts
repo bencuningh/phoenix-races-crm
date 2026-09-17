@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updatePhone } from "@/lib/notion";
 import { createServiceClient } from "@/lib/supabase";
+import { getErrorMessage } from "@/lib/errors";
 
 export const dynamic = "force-dynamic";
 
@@ -29,9 +30,6 @@ export async function PATCH(
 
     return NextResponse.json({ ok: true, phone });
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getErrorMessage(err) }, { status: 500 });
   }
 }
