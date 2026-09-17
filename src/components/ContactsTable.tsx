@@ -4,6 +4,7 @@ import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
 import { EditableField } from "@/components/EditableField";
 import { DeleteContactButton } from "@/components/DeleteContactButton";
+import { FollowupThresholdControl } from "@/components/FollowupThresholdControl";
 
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
@@ -19,7 +20,13 @@ const th = "sticky top-0 bg-turquoise-fonce px-2 py-1.5 text-left text-xs font-m
 const td = "px-2 py-1.5 align-top text-xs text-noir-nuit border-b border-border-subtle whitespace-nowrap";
 const truncateCell = "max-w-[8rem] truncate";
 
-export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
+export function ContactsTable({
+  contacts,
+  defaultFollowupThreshold,
+}: {
+  contacts: CachedContactRow[];
+  defaultFollowupThreshold: number;
+}) {
   return (
     <div className="overflow-x-auto rounded-xl border border-border-subtle">
       <table className="w-full border-collapse">
@@ -35,6 +42,7 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
             <th className={th}>Dernier email</th>
             <th className={th}>Jours</th>
             <th className={th}>Statut</th>
+            <th className={th}>Seuil</th>
             <th className={th}>Stand-by</th>
             <th className={th}>Relancer le</th>
             <th className={th}></th>
@@ -67,6 +75,14 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
                 {c.days_since_contact ?? "—"}
               </td>
               <td className={td}>{c.needs_followup ? "À relancer" : "OK"}</td>
+              <td className={td}>
+                <FollowupThresholdControl
+                  pageId={c.notion_page_id}
+                  value={c.followup_threshold_days}
+                  defaultDays={defaultFollowupThreshold}
+                  compact
+                />
+              </td>
               <td className={td}>
                 <StandbyToggle pageId={c.notion_page_id} standby={c.standby} compact />
               </td>

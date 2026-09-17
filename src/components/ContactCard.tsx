@@ -6,6 +6,7 @@ import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
 import { EditableField } from "@/components/EditableField";
 import { DeleteContactButton } from "@/components/DeleteContactButton";
+import { FollowupThresholdControl } from "@/components/FollowupThresholdControl";
 
 const REASON_LABEL: Record<string, string> = {
   never_contacted: "Jamais contacté",
@@ -51,7 +52,13 @@ function formatDate(iso: string | null): string {
   });
 }
 
-export function ContactCard({ contact }: { contact: CachedContactRow }) {
+export function ContactCard({
+  contact,
+  defaultFollowupThreshold,
+}: {
+  contact: CachedContactRow;
+  defaultFollowupThreshold: number;
+}) {
   return (
     <li className="rounded-xl border border-border-subtle bg-surface p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
@@ -83,8 +90,13 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
         )}
       </div>
 
-      <div className="mt-2">
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
         <SnoozeControl pageId={contact.notion_page_id} value={contact.snooze_until} />
+        <FollowupThresholdControl
+          pageId={contact.notion_page_id}
+          value={contact.followup_threshold_days}
+          defaultDays={defaultFollowupThreshold}
+        />
       </div>
 
       <div className="mt-2 flex flex-col gap-1">

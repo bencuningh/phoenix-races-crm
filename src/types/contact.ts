@@ -31,6 +31,8 @@ export interface EnrichedContact extends NotionContact {
   followupReason: FollowupReason | null;
   /** Most recent Gmail message date (sent or received) with this contact, or null. */
   lastEmailContact: string | null;
+  /** Per-contact override of the follow-up threshold (days), or null to use the global default. */
+  followupThresholdDays: number | null;
 }
 
 /** Row shape as read back from the `contacts_cache` Supabase table (snake_case). */
@@ -52,5 +54,6 @@ export interface CachedContactRow {
   needs_qualification: boolean;
   standby: boolean;
   snooze_until: string | null;
+  followup_threshold_days: number | null;
   updated_at: string;
 }

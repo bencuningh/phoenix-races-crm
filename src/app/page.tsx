@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase";
 import { Dashboard } from "@/components/Dashboard";
 import { SyncButton } from "@/components/SyncButton";
 import { isSnoozed } from "@/lib/followup";
+import { env } from "@/lib/env";
 import type { CachedContactRow } from "@/types/contact";
 
 export const dynamic = "force-dynamic";
@@ -54,6 +55,7 @@ export default async function Home() {
             followupContacts={followupContacts}
             allContacts={contacts}
             types={types}
+            defaultFollowupThreshold={env.followupThresholdDays}
           />
         )}
       </main>
