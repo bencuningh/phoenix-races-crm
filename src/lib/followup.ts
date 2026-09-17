@@ -34,13 +34,14 @@ export function computeFollowup(
     lastReceived: null,
   },
   now: Date = new Date(),
+  thresholdDays: number = env.followupThresholdDays,
 ): FollowupComputation {
   if (!lastReach) {
     return { daysSinceContact: null, needsFollowup: true, followupReason: "never_contacted" };
   }
 
   const daysSinceContact = daysBetween(lastReach, now);
-  if (daysSinceContact <= env.followupThresholdDays) {
+  if (daysSinceContact <= thresholdDays) {
     return { daysSinceContact, needsFollowup: false, followupReason: null };
   }
 
@@ -53,6 +54,14 @@ export function computeFollowup(
     needsFollowup: true,
     followupReason: iSentLast ? "awaiting_reply" : "silence",
   };
+}
+
+/**
+ * Re-derives `needs_followup` from an already-cached `days_since_contact` against a
+ * (possibly just-changed) threshold, without needing a fresh Gmail cross-check.
+ */
+export function recomputeNeedsFollowup(daysSinceContact: number | null, thresholdDays: number): boolean {
+  return daysSinceContact === null || daysSinceContact > thresholdDays;
 }
 
 /** True if a contact is paused indefinitely or snoozed to a future date — hidden from "à relancer" and the digest. */

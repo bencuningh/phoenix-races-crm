@@ -3,6 +3,8 @@ import { getAuthorizedGmailClient } from "@/lib/gmail/oauth";
 import { crossContactWithGmail } from "@/lib/gmail/search";
 import { computeFollowup, maxIsoDate } from "@/lib/followup";
 import { createServiceClient } from "@/lib/supabase";
+import { getErrorMessage } from "@/lib/errors";
+import { env } from "@/lib/env";
 import type { EnrichedContact, GmailCrossResult, NotionContact } from "@/types/contact";
 
 function isCompanyRow(contact: NotionContact): boolean {
@@ -37,6 +39,18 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
   try {
     const contacts = await fetchContacts();
 
+    // Per-contact follow-up threshold overrides set from the UI must survive
+    // this full re-upsert, so read them back before recomputing anything.
+    const { data: existingThresholds } = await supabase
+      .from("contacts_cache")
+      .select("notion_page_id, followup_threshold_days");
+    const thresholdByPageId = new Map<string, number | null>(
+      (existingThresholds ?? []).map((r) => [
+        r.notion_page_id as string,
+        r.followup_threshold_days as number | null,
+      ]),
+    );
+
     // Gmail is optional at this stage: if it isn't connected yet, we still
     // cache Notion data and compute follow-up from the manually-set Last Reach.
     let gmailClient: Awaited<ReturnType<typeof getAuthorizedGmailClient>> | null = null;
@@ -45,7 +59,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
     } catch (err) {
       errors.push({
         contact: "(gmail)",
-        message: err instanceof Error ? err.message : String(err),
+        message: getErrorMessage(err),
       });
     }
 
@@ -67,7 +81,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
       } catch (err) {
         errors.push({
           contact: contact.name,
-          message: err instanceof Error ? err.message : String(err),
+          message: getErrorMessage(err),
         });
       }
     }
@@ -93,9 +107,12 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         lastSent: null,
         lastReceived: null,
       };
+      const followupThresholdDays = thresholdByPageId.get(contact.notionPageId) ?? null;
       const { daysSinceContact, needsFollowup, followupReason } = computeFollowup(
         effectiveLastReach,
         gmail,
+        new Date(),
+        followupThresholdDays ?? env.followupThresholdDays,
       );
 
       return {
@@ -107,6 +124,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         needsFollowup,
         followupReason,
         lastEmailContact: maxIsoDate(gmail.lastSent, gmail.lastReceived),
+        followupThresholdDays,
       };
     });
 
@@ -126,6 +144,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         needs_followup: c.needsFollowup,
         followup_reason: c.followupReason,
         needs_qualification: c.needsQualification,
+        followup_threshold_days: c.followupThresholdDays,
         updated_at: new Date().toISOString(),
       })),
       { onConflict: "notion_page_id" },
@@ -152,7 +171,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
 
     return { status, contactsProcessed: contacts.length, contactsUpdated, errors };
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = getErrorMessage(err);
     await supabase
       .from("sync_log")
       .update({
