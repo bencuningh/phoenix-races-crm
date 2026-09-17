@@ -5,7 +5,7 @@ import type { CachedContactRow } from "@/types/contact";
 import { ContactCard } from "@/components/ContactCard";
 import { ContactsTable } from "@/components/ContactsTable";
 
-type Tab = "relances" | "qualifier" | "toutes" | "tableau";
+type Tab = "relances" | "toutes" | "tableau";
 type SortKey = "name" | "last_reach_desc" | "last_reach_asc" | "days_desc";
 
 function FilterChip({
@@ -48,12 +48,10 @@ function sortContacts(contacts: CachedContactRow[], sort: SortKey): CachedContac
 
 export function Dashboard({
   followupContacts,
-  qualifyContacts,
   allContacts,
   types,
 }: {
   followupContacts: CachedContactRow[];
-  qualifyContacts: CachedContactRow[];
   allContacts: CachedContactRow[];
   types: string[];
 }) {
@@ -61,12 +59,7 @@ export function Dashboard({
   const [type, setType] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("name");
 
-  const source =
-    tab === "relances"
-      ? followupContacts
-      : tab === "qualifier"
-        ? qualifyContacts
-        : allContacts;
+  const source = tab === "relances" ? followupContacts : allContacts;
 
   const filtered = useMemo(() => {
     return source.filter((c) => !type || c.type === type);
@@ -74,7 +67,7 @@ export function Dashboard({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="grid grid-cols-3 gap-2">
         <button
           type="button"
           onClick={() => setTab("relances")}
@@ -85,17 +78,6 @@ export function Dashboard({
           }`}
         >
           À relancer ({followupContacts.length})
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("qualifier")}
-          className={`rounded-lg py-2 text-sm font-medium transition-colors ${
-            tab === "qualifier"
-              ? "bg-turquoise-fonce text-blanc-sable"
-              : "bg-surface text-noir-nuit/70 border border-border-subtle"
-          }`}
-        >
-          À qualifier ({qualifyContacts.length})
         </button>
         <button
           type="button"

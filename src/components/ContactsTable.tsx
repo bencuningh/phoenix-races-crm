@@ -66,9 +66,7 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
               <td className={`${td} ${c.days_since_contact !== null ? "font-medium text-orange-braise" : ""}`}>
                 {c.days_since_contact ?? "—"}
               </td>
-              <td className={td}>
-                {c.needs_qualification ? "À qualifier" : c.needs_followup ? "À relancer" : "OK"}
-              </td>
+              <td className={td}>{c.needs_followup ? "À relancer" : "OK"}</td>
               <td className={td}>
                 <StandbyToggle pageId={c.notion_page_id} standby={c.standby} compact />
               </td>
