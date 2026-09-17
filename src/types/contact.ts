@@ -29,6 +29,8 @@ export interface EnrichedContact extends NotionContact {
   daysSinceContact: number | null;
   needsFollowup: boolean;
   followupReason: FollowupReason | null;
+  /** Most recent Gmail message date (sent or received) with this contact, or null. */
+  lastEmailContact: string | null;
 }
 
 /** Row shape as read back from the `contacts_cache` Supabase table (snake_case). */
@@ -42,6 +44,7 @@ export interface CachedContactRow {
   linkedin: string | null;
   phone: string | null;
   last_reach: string | null;
+  last_email_contact: string | null;
   is_company_row: boolean;
   days_since_contact: number | null;
   needs_followup: boolean;

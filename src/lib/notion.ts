@@ -112,6 +112,14 @@ export async function updateLinkedin(pageId: string, url: string | null): Promis
   });
 }
 
+export async function archiveContact(pageId: string): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    archived: true,
+  });
+}
+
 export async function updatePhone(pageId: string, phoneNumber: string | null): Promise<void> {
   const notion = getClient();
   await notion.pages.update({

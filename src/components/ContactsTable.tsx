@@ -3,6 +3,7 @@ import { TypeSelect } from "@/components/TypeSelect";
 import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
 import { EditableField } from "@/components/EditableField";
+import { DeleteContactButton } from "@/components/DeleteContactButton";
 
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
@@ -31,10 +32,12 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
             <th className={th}>Téléphone</th>
             <th className={th}>LinkedIn</th>
             <th className={th}>Dernier contact</th>
+            <th className={th}>Dernier email</th>
             <th className={th}>Jours</th>
             <th className={th}>Statut</th>
             <th className={th}>Stand-by</th>
             <th className={th}>Relancer le</th>
+            <th className={th}></th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +62,7 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
                 <EditableField pageId={c.notion_page_id} field="linkedin" type="url" value={c.linkedin} placeholder="+ LinkedIn" />
               </td>
               <td className={td}>{formatDate(c.last_reach)}</td>
+              <td className={td}>{formatDate(c.last_email_contact)}</td>
               <td className={`${td} ${c.days_since_contact !== null ? "font-medium text-orange-braise" : ""}`}>
                 {c.days_since_contact ?? "—"}
               </td>
@@ -70,6 +74,9 @@ export function ContactsTable({ contacts }: { contacts: CachedContactRow[] }) {
               </td>
               <td className={td}>
                 <SnoozeControl pageId={c.notion_page_id} value={c.snooze_until} hideLabel />
+              </td>
+              <td className={td}>
+                <DeleteContactButton pageId={c.notion_page_id} name={c.name} compact />
               </td>
             </tr>
           ))}
