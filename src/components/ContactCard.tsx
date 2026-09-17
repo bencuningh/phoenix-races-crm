@@ -5,6 +5,7 @@ import { DraftButton } from "@/components/DraftButton";
 import { StandbyToggle } from "@/components/StandbyToggle";
 import { SnoozeControl } from "@/components/SnoozeControl";
 import { EditableField } from "@/components/EditableField";
+import { DeleteContactButton } from "@/components/DeleteContactButton";
 
 const REASON_LABEL: Record<string, string> = {
   never_contacted: "Jamais contacté",
@@ -111,6 +112,10 @@ export function ContactCard({ contact }: { contact: CachedContactRow }) {
       </div>
 
       {contact.needs_followup && <DraftButton pageId={contact.notion_page_id} />}
+
+      <div className="mt-3 flex justify-end border-t border-border-subtle pt-2">
+        <DeleteContactButton pageId={contact.notion_page_id} name={contact.name} />
+      </div>
     </li>
   );
 }

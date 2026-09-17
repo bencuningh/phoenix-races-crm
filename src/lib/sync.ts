@@ -106,6 +106,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         daysSinceContact,
         needsFollowup,
         followupReason,
+        lastEmailContact: maxIsoDate(gmail.lastSent, gmail.lastReceived),
       };
     });
 
@@ -119,6 +120,7 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
         linkedin: c.linkedin,
         phone: c.phone,
         last_reach: c.lastReach,
+        last_email_contact: c.lastEmailContact,
         is_company_row: c.isCompanyRow,
         days_since_contact: c.daysSinceContact,
         needs_followup: c.needsFollowup,
