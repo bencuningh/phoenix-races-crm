@@ -55,9 +55,11 @@ function formatDate(iso: string | null): string {
 export function ContactCard({
   contact,
   defaultFollowupThreshold,
+  typeOptions,
 }: {
   contact: CachedContactRow;
   defaultFollowupThreshold: number;
+  typeOptions: string[];
 }) {
   return (
     <li className="rounded-xl border border-border-subtle bg-surface p-4 shadow-sm">
@@ -72,7 +74,7 @@ export function ContactCard({
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs">
-        <TypeSelect pageId={contact.notion_page_id} value={contact.type} />
+        <TypeSelect pageId={contact.notion_page_id} value={contact.type} options={typeOptions} />
         {contact.is_company_row && (
           <span className="rounded-full border border-border-subtle px-2 py-0.5 text-noir-nuit/50">
             Entreprise

@@ -3,6 +3,7 @@ import { Dashboard } from "@/components/Dashboard";
 import { SyncButton } from "@/components/SyncButton";
 import { isSnoozed } from "@/lib/followup";
 import { env } from "@/lib/env";
+import { getCachedTypeOptions } from "@/lib/typeOptions";
 import type { CachedContactRow } from "@/types/contact";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,7 @@ export default async function Home() {
     .sort(sortFollowup);
 
   const types = [...new Set(contacts.map((c) => c.type).filter(Boolean))] as string[];
+  const typeOptions = await getCachedTypeOptions();
 
   return (
     <div className="flex min-h-full flex-col">
@@ -55,6 +57,7 @@ export default async function Home() {
             followupContacts={followupContacts}
             allContacts={contacts}
             types={types}
+            typeOptions={typeOptions}
             defaultFollowupThreshold={env.followupThresholdDays}
           />
         )}

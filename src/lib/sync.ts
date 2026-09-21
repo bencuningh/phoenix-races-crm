@@ -1,4 +1,4 @@
-import { fetchContacts, updateLastReach } from "@/lib/notion";
+import { fetchContacts, fetchTypeOptions, updateLastReach } from "@/lib/notion";
 import { getAuthorizedGmailClient } from "@/lib/gmail/oauth";
 import { crossContactWithGmail } from "@/lib/gmail/search";
 import { computeFollowup, maxIsoDate } from "@/lib/followup";
@@ -38,6 +38,17 @@ export async function runSync(trigger: "cron" | "manual"): Promise<SyncResult> {
 
   try {
     const contacts = await fetchContacts();
+
+    // Keep the Type dropdown's options in lockstep with Notion's own select list,
+    // so removing/renaming an option there never leaves the app showing stale choices.
+    try {
+      const typeOptions = await fetchTypeOptions();
+      await supabase
+        .from("type_options")
+        .upsert({ id: 1, options: typeOptions, updated_at: new Date().toISOString() });
+    } catch (err) {
+      errors.push({ contact: "(type options)", message: getErrorMessage(err) });
+    }
 
     // Per-contact follow-up threshold overrides set from the UI must survive
     // this full re-upsert, so read them back before recomputing anything.

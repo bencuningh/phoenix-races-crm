@@ -2,19 +2,25 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { TYPES } from "@/lib/constants";
 
 export function TypeSelect({
   pageId,
   value,
+  options,
 }: {
   pageId: string;
   value: string | null;
+  options: string[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [current, setCurrent] = useState(value ?? "");
   const [error, setError] = useState<string | null>(null);
+
+  // The current value may no longer be a valid Notion option (e.g. it was renamed
+  // or removed there since this contact was set); still show it so the value isn't
+  // silently dropped, but it won't be selectable as a fresh choice for other contacts.
+  const selectableOptions = current && !options.includes(current) ? [current, ...options] : options;
 
   async function handleChange(next: string) {
     const previous = current;
@@ -48,7 +54,7 @@ export function TypeSelect({
         <option value="" disabled>
           Type
         </option>
-        {TYPES.map((t) => (
+        {selectableOptions.map((t) => (
           <option key={t} value={t}>
             {t}
           </option>

@@ -46,6 +46,18 @@ function pageToContact(page: PageObjectResponse): NotionContact {
   };
 }
 
+/** Live options of the Notion "Type" select property, in Notion's own order. */
+export async function fetchTypeOptions(): Promise<string[]> {
+  const notion = getClient();
+  const dataSource = await notion.dataSources.retrieve({
+    data_source_id: env.notionDataSourceId,
+  });
+  if (!("properties" in dataSource)) return [];
+  const typeProperty = dataSource.properties["Type"];
+  if (typeProperty?.type !== "select") return [];
+  return typeProperty.select.options.map((option) => option.name);
+}
+
 export async function fetchContacts(): Promise<NotionContact[]> {
   const notion = getClient();
   const contacts: NotionContact[] = [];

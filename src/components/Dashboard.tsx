@@ -60,11 +60,13 @@ export function Dashboard({
   followupContacts,
   allContacts,
   types,
+  typeOptions,
   defaultFollowupThreshold,
 }: {
   followupContacts: CachedContactRow[];
   allContacts: CachedContactRow[];
   types: string[];
+  typeOptions: string[];
   defaultFollowupThreshold: number;
 }) {
   const [tab, setTab] = useState<string>("relances");
@@ -295,6 +297,7 @@ export function Dashboard({
         <ContactsTable
           contacts={sortContacts(filtered, sort)}
           defaultFollowupThreshold={defaultFollowupThreshold}
+          typeOptions={typeOptions}
         />
       ) : (
         <ul className="mx-auto flex w-full max-w-2xl flex-col gap-2.5">
@@ -303,6 +306,7 @@ export function Dashboard({
               key={contact.id}
               contact={contact}
               defaultFollowupThreshold={defaultFollowupThreshold}
+              typeOptions={typeOptions}
             />
           ))}
         </ul>

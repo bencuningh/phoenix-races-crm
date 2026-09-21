@@ -23,9 +23,11 @@ const truncateCell = "max-w-[8rem] truncate";
 export function ContactsTable({
   contacts,
   defaultFollowupThreshold,
+  typeOptions,
 }: {
   contacts: CachedContactRow[];
   defaultFollowupThreshold: number;
+  typeOptions: string[];
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-border-subtle">
@@ -58,7 +60,7 @@ export function ContactsTable({
                 {c.company && c.company !== c.name ? c.company : "—"}
               </td>
               <td className={td}>
-                <TypeSelect pageId={c.notion_page_id} value={c.type} />
+                <TypeSelect pageId={c.notion_page_id} value={c.type} options={typeOptions} />
               </td>
               <td className={td}>
                 <EditableField pageId={c.notion_page_id} field="email" type="email" value={c.email} placeholder="+ email" />
