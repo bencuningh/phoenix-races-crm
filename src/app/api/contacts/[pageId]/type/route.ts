@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateType } from "@/lib/notion";
 import { createServiceClient } from "@/lib/supabase";
-import { TYPES } from "@/lib/constants";
+import { getCachedTypeOptions } from "@/lib/typeOptions";
 import { getErrorMessage } from "@/lib/errors";
 
 export const dynamic = "force-dynamic";
@@ -14,9 +14,10 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   const type = body?.type;
 
-  if (typeof type !== "string" || !TYPES.includes(type as (typeof TYPES)[number])) {
+  const validTypes = await getCachedTypeOptions();
+  if (typeof type !== "string" || !validTypes.includes(type)) {
     return NextResponse.json(
-      { error: `type must be one of: ${TYPES.join(", ")}` },
+      { error: `type must be one of: ${validTypes.join(", ")}` },
       { status: 400 },
     );
   }
