@@ -67,7 +67,7 @@ Active aussi la **Deployment Protection** (mot de passe) dans Settings → Deplo
 - **Stand-by** — met un contact en pause indéfiniment (exclu de "à relancer" et du digest) jusqu'à ce qu'il soit repris.
 - **Relancer le [date]** — reporte un contact à une date précise sans le mettre en stand-by permanent ; redevient actif automatiquement une fois la date passée.
 - **Générer un brouillon** — rédige un email de relance via Claude, à partir de l'historique Gmail réel avec ce contact.
-- **Digest hebdomadaire** — chaque vendredi 17h UTC (~18-19h Paris), un email récapitulatif des contacts à relancer (hors stand-by/reportés) est envoyé automatiquement à l'adresse Gmail connectée.
+- **Digest hebdomadaire** — chaque lundi 8h UTC (~9-10h Paris), un email récapitulatif des contacts à relancer (hors stand-by/reportés) est envoyé automatiquement à l'adresse Gmail connectée.
 
 ## Workflow git
 
